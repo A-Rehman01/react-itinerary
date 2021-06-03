@@ -1,6 +1,7 @@
 import React from 'react';
 import '@mobiscroll/react/dist/css/mobiscroll.min.css';
 import { Eventcalendar, getJson, toast, setOptions } from '@mobiscroll/react';
+import moment from 'moment';
 
 setOptions({
   theme: 'ios',
@@ -49,7 +50,7 @@ function Scheduler() {
       'https://trial.mobiscroll.com/workday-events/',
       (events) => {
         setEvents(events);
-        console.log({ events });
+        // console.log({ events });
       },
       'jsonp'
     );
@@ -60,6 +61,8 @@ function Scheduler() {
     return {
       schedule: {
         type: 'week',
+        // type: 'day',
+
         // startDay: 1, // Monday
         // endDay: 5, // Friday
         // startTime: '07:30',
@@ -124,41 +127,66 @@ function Scheduler() {
       </>
     );
   };
+
+  const onSelectedDateChange = React.useCallback((event, inst) => {
+    console.log(event.date);
+  });
+
+  const onPageLoading = React.useCallback((event, inst) => {
+    console.log('pageloading', event);
+    event.firstDay = myEvents[0].start;
+
+    event.viewStart = myEvents[0].start;
+
+    console.log(myEvents[0].start);
+  });
   return (
     // <div style={{ width: '70%' }}>
-    <Eventcalendar
-      data={myEvents}
-      view={view}
-      dragToCreate={false}
-      dragToMove={true}
-      dragToResize={true}
-      invalidateEvent='strict'
-      invalid={inv}
-      onEventCreateFailed={onEventCreateFailed}
-      onEventUpdateFailed={onEventUpdateFailed}
-      onEventClick={onEventClick}
-      onEventUpdated={(Updated) => console.log({ Updated })}
-      allDayText={false}
-      renderAgenda={renderAgenda}
-      onDayHoverIn={dayHover}
-      //   timeFormat={false}
-      // timeText={false}
-      //   selectedDate={new Date()}
-      //   renderHeader={customWithNavButtons}
-      //   colors={[
-      //     { date: new Date(2020, 2, 23), background: 'pink' },
-      //     { date: new Date(2020, 2, 24), background: 'green' },
-      //     {
-      //       background: 'black',
-      //       recurring: { repeat: 'weekly', weekDays: 'SU' },
-      //     },
-      //     {
-      //       background: 'black',
-      //       recurring: { repeat: 'weekly', weekDays: 'SA' },
-      //     },
-      //   ]}
-      //   min={new Date()}
-    />
+    myEvents.length !== 0 && (
+      <Eventcalendar
+        data={myEvents}
+        view={view}
+        dragToCreate={false}
+        dragToMove={true}
+        dragToResize={true}
+        invalidateEvent='strict'
+        invalid={inv}
+        onEventCreateFailed={onEventCreateFailed}
+        onEventUpdateFailed={onEventUpdateFailed}
+        onEventClick={onEventClick}
+        onEventUpdated={(Updated) => console.log({ Updated })}
+        allDayText={false}
+        renderAgenda={renderAgenda}
+        onDayHoverIn={dayHover}
+        //   timeFormat={false}
+        // timeText={false}
+        //   selectedDate={new Date()}
+        //   renderHeader={customWithNavButtons}
+        //   colors={[
+        //     { date: new Date(2020, 2, 23), background: 'pink' },
+        //     { date: new Date(2020, 2, 24), background: 'green' },
+        //     {
+        //       background: 'black',
+        //       recurring: { repeat: 'weekly', weekDays: 'SU' },
+        //     },
+        //     {
+        //       background: 'black',
+        //       recurring: { repeat: 'weekly', weekDays: 'SA' },
+        //     },
+        //   ]}
+
+        // selectedDate={new Date()}  phr onChange pr is pr set krwa do
+        // onSelectedDateChange={onSelectedDateChange}
+
+        // min={moment().format('02-2-2022')}
+        // min={new Date(2021, 4, 24)}
+        dateText={false}
+        showToday={false}
+        // showLabelCount={false}
+        firstDay={1}
+        onPageLoading={onPageLoading}
+      />
+    )
     // </div>
   );
 }
